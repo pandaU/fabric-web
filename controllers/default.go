@@ -4,19 +4,23 @@ import (
 	"encoding/json"
 	"fabric-web/models"
 	"fabric-web/request"
+	"fabric-web/utils"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/validation"
+	"time"
 )
 
 type MainController struct {
 	beego.Controller
 }
 
-/*func (c *MainController) Get() {
-	c.Data["Website"] = "beego.me"
-	c.Data["Email"] = "astaxie@gmail.bbcom"
-	c.TplName = "index.html"
-}*/
+func (c *MainController) Get() {
+	var redisClient utils.RedisUtil
+	redisClient.Set("name","pandaU",30*time.Second)
+	c.Data["json"]=models.RespSuccess(redisClient.Get("name"))
+	c.ServeJSON()
+
+}
 func (c *MainController) Post() {
 	DB :=models.Conn
 	req :=request.UserResqust{}
